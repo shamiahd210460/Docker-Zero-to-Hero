@@ -1,17 +1,29 @@
-FROM ubuntu
+FROM ubuntu:20.04
 
+# Install Python and pip
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip
+
+# Show installed versions
+RUN python3 --version
+RUN pip3 --version
+
+# Copy the application files
+COPY . /app
+
+# Set the working directory
 WORKDIR /app
 
-COPY requirements.txt /app
-COPY devops /app
+# Install dependencies
+RUN pip3 install -r requirements.txt
 
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    pip install -r requirements.txt && \
-    cd devops
+# Verify the 'devops' directory exists
+RUN ls -l devops
 
-ENTRYPOINT ["python3"]
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+# Set the entry point
+CMD ["python3", "app.py"]
+
+
 
 
 
